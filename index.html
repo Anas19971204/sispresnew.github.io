@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Ujian Online Resmi</title>
+  <!-- Google Fonts & FontAwesome 6 -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg-main: #f8fafc;
+      --danger: #ef4444;
+      --danger-bg: #fef2f2;
+      --text-dark: #0f172a;
+      --text-muted: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-dark);
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* Header Bar */
+    header {
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 8px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 65px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      z-index: 10;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-img {
+      height: 42px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text-dark);
+      line-height: 1.2;
+    }
+
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .timer-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f1f5f9;
+      color: var(--text-dark);
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 14px;
+      border: 1px solid #cbd5e1;
+    }
+
+    .timer-badge i {
+      color: var(--primary);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.4; }
+      100% { opacity: 1; }
+    }
+
+    @media (max-width: 600px) {
+      .brand-subtitle {
+        display: none;
+      }
+      .brand-title {
+        font-size: 13px;
+      }
+      .logo-img {
+        height: 34px;
+      }
+      .timer-badge {
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+    }
+
+    /* Main Form Frame */
+    #form {
+      flex: 1;
+      width: 100%;
+      height: calc(100vh - 65px);
+      background: #ffffff;
+      display: none; /* Default disembunyikan agar tidak bocor saat loading */
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Lock Screen Overlay */
+    #lock-screen {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 999999;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .alert-box {
+      background: #ffffff;
+      width: 90%;
+      max-width: 440px;
+      padding: 36px 30px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+    }
+
+    .icon-wrapper {
+      width: 64px;
+      height: 64px;
+      background-color: var(--danger-bg);
+      color: var(--danger);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 28px;
+    }
+
+    .alert-box h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    .alert-box p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px 16px 12px 42px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .input-group input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+    }
+
+    .input-group i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 12px;
+      background-color: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-submit:active {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+<body oncontextmenu="return false;"> 
+
+  <!-- Top Navigation Bar -->
+  <header>
+    <div class="brand-section">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/9/9c/Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg" alt="Tut Wuri Handayani" class="logo-img">
+      <div class="brand-text">
+        <span class="brand-title">Portal Ujian Online</span>
+        <span class="brand-subtitle">Sistem Penilaian Terpadu</span>
+      </div>
+    </div>
+
+    <!-- Timer -->
+    <div class="timer-badge">
+      <i class="fa-regular fa-clock"></i>
+      <span id="time">06:00 Menit</span>
+    </div>
+  </header>
+
+  <!-- Google Forms Frame -->
+  <div id="form">
+    <iframe id="exam-iframe" src="https://docs.google.com/forms/d/e/1FAIpQLScaZ95Uq7M3JXB_GsxvAJE4j-_NC1sTHg8wgGDAMS-XIyqU6w/viewform?usp=sf_link">LOADING...</iframe>
+  </div>
+
+  <!-- Layar Penguncian & Waktu Habis -->
+  <div id="lock-screen">
+    <div class="alert-box">
+      <div class="icon-wrapper" id="lock-icon">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <h2 id="lock-title">Akses Terkunci</h2>
+      <p id="lock-desc">Terdeteksi aktivitas mencurigakan. Masukkan password pengawas untuk membuka kembali layar ujian.</p>
+      
+      <div class="input-group">
+        <i class="fa-solid fa-key"></i>
+        <input type="password" id="admin-password" placeholder="Password Pengawas" autocomplete="off">
+      </div>
+      
+      <button type="button" class="btn-submit" id="btn-unlock">Buka Layar Ujian</button>
+    </div>
+  </div>
+
+  <script>
+    // Password Pengawas (Base64 dari: pengawas2026)
+    var PASSWORD_BASE64 = "cGVuZ2F3YXMyMDI2"; 
+
+    var WAKTU_AWAL_DETIK = 60 * 120; // 6 Menit
+    var timerInterval = null;
+    var deteksiAktif = false;
+    var waktuHabisStatus = false;
+
+    // 1. Inisialisasi Halaman (Cek Kunci Dahulu)
+    window.addEventListener("DOMContentLoaded", function() {
+      // HAPUS localStorage.clear(); agar tidak meriset status kunci saat refresh
+
+      if (sessionStorage.getItem("waktu_habis") === "true") {
+        waktuHabisStatus = true;
+        tampilkanLayarKunci("waktu_habis");
+      } else if (sessionStorage.getItem("ujian_terkunci") === "true") {
+        tampilkanLayarKunci("pelanggaran");
+      } else {
+        tampilkanLayarUjian();
+        mulaiTimer();
+
+        // Aktifkan keamanan setelah 1.5 detik
+        setTimeout(function() {
+          deteksiAktif = true;
+        }, 1500);
+      }
+
+      document.getElementById("btn-unlock").addEventListener("click", bukaKunci);
+      
+      document.getElementById("admin-password").addEventListener("keypress", function(e) {
+        if (e.key === "Enter") {
+          bukaKunci();
+        }
+      });
+    });
+
+    // 2. Fungsi Timer Ujian
+    function mulaiTimer() {
+      var sisaWaktu = sessionStorage.getItem("sisa_waktu");
+      var duration = (sisaWaktu !== null) ? parseInt(sisaWaktu, 10) : WAKTU_AWAL_DETIK;
+      var display = document.querySelector('#time');
+
+      clearInterval(timerInterval);
+
+      timerInterval = setInterval(function () {
+        if (duration <= 0) {
+          clearInterval(timerInterval);
+          waktuHabisStatus = true;
+          sessionStorage.setItem("waktu_habis", "true");
+          sessionStorage.setItem("sisa_waktu", 0);
+          display.textContent = "00:00 Menit";
+          tampilkanLayarKunci("waktu_habis");
+          return;
+        }
+
+        var minutes = parseInt(duration / 60, 10);
+        var seconds = parseInt(duration % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = minutes + ":" + seconds + " Menit";
+        sessionStorage.setItem("sisa_waktu", duration);
+
+        duration--;
+      }, 1000);
+    }
+
+    // 3. Menampilkan Halaman Ujian
+    function tampilkanLayarUjian() {
+      document.getElementById("lock-screen").style.display = "none";
+      document.getElementById("form").style.display = "block";
+    }
+
+    // 4. Menampilkan Layar Kunci
+    function tampilkanLayarKunci(tipe) {
+      clearInterval(timerInterval);
+      document.getElementById("form").style.display = "none";
+
+      var lockIcon = document.getElementById("lock-icon");
+      var lockTitle = document.getElementById("lock-title");
+      var lockDesc = document.getElementById("lock-desc");
+
+      if (tipe === "waktu_habis") {
+        lockIcon.innerHTML = '<i class="fa-solid fa-hourglass-end"></i>';
+        lockTitle.textContent = "Waktu Ujian Habis";
+        lockDesc.textContent = "Sesi ujian Anda telah berakhir secara otomatis. Silakan masukkan password pengawas untuk memproses pengumpulan.";
+      } else {
+        sessionStorage.setItem("ujian_terkunci", "true"); // Simpan status kunci secara permanen di session
+        lockIcon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+        lockTitle.textContent = "Pelanggaran Terdeteksi";
+        lockDesc.textContent = "Anda terdeteksi berpindah tab atau meninggalkan halaman ujian. Layar dikunci demi keamanan.";
+      }
+
+      document.getElementById("lock-screen").style.display = "flex";
+    }
+
+    // 5. Buka Kunci Layar
+    function bukaKunci() {
+      var inputPass = document.getElementById("admin-password").value.trim();
+      var passwordAsli = atob(PASSWORD_BASE64);
+
+      if (inputPass === passwordAsli) {
+        deteksiAktif = false;
+        
+        // Hapus status terkunci hanya jika password benar
+        sessionStorage.removeItem("ujian_terkunci");
+        sessionStorage.removeItem("waktu_habis");
+        
+        document.getElementById("admin-password").value = "";
+
+        if (waktuHabisStatus) {
+          alert("Waktu habis. Silakan kumpulkan jawaban kepada pengawas.");
+          sessionStorage.removeItem("sisa_waktu");
+          location.reload();
+        } else {
+          tampilkanLayarUjian();
+          mulaiTimer();
+          
+          setTimeout(function() {
+            deteksiAktif = true;
+          }, 1500);
+        }
+
+      } else {
+        alert("Password salah! Hubungi pengawas.");
+      }
+    }
+
+    // 6. Sensor Keamanan
+    document.addEventListener("visibilitychange", function() {
+      if (document.hidden && !waktuHabisStatus && deteksiAktif) {
+        tampilkanLayarKunci("pelanggaran");
+      }
+    });
+
+    window.addEventListener("blur", function() {
+      setTimeout(function() {
+        var iframe = document.getElementById("exam-iframe");
+        if (document.activeElement !== iframe && !waktuHabisStatus && deteksiAktif) {
+          tampilkanLayarKunci("pelanggaran");
+        }
+      }, 100);
+    });
+
+    // 7. Blokir Developer Tools & Refresh Keyboard (F5 / Ctrl+R)
+    document.addEventListener("keydown", function (e) {
+      if (
+        e.keyCode === 123 || 
+        (e.ctrlKey && e.keyCode === 85) || 
+        (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67))
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    });
+  </script>
+</body>
+</html>
